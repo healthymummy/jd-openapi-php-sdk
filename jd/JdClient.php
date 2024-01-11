@@ -2,9 +2,6 @@
 namespace Jd;
 
 use \Exception;
-use Yii;
-use yii\helpers\FileHelper;
-use yii\helpers\Json;
 
 class JdClient
 {
@@ -45,7 +42,7 @@ class JdClient
         if ($this->connectTimeout) {
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->connectTimeout);
         }
-        //https 请求
+        //https request
         if(strlen($url) > 5 && strtolower(substr($url,0,5)) == "https" ) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -55,9 +52,9 @@ class JdClient
             $postBodyString = "";
             $postMultipart = false;
             foreach ($postFields as $k => $v) {
-                if ("@" != substr($v, 0, 1)) { // 判断是不是文件上传
+                if ("@" != substr($v, 0, 1)) { // Determine whether a file is uploaded
                     $postBodyString .= "$k=" . urlencode($v) . "&";
-                } else { //文件上传用multipart/form-data，否则用www-form-urlencoded
+                } else { // Use multipart/form-data for file upload, otherwise use www-form-urlencoded
                     $postMultipart = true;
                 }
             }
@@ -85,7 +82,7 @@ class JdClient
 
     public function execute($request, $access_token = null)
     {
-        //组装系统参数
+        // Setting system parameters
         $sysParams["app_key"] = $this->appKey;
         $sysParams["v"] = $this->version;
         $sysParams["method"] = $request->getApiMethodName();
@@ -94,13 +91,13 @@ class JdClient
             $sysParams["access_token"] = $access_token;
         }
 
-        //获取业务参数
+        // Getting service parameters
         $apiParams = $request->getApiParas();
         $sysParams[$this->json_param_key] = $apiParams;
 
-        //签名
+        // Signature
         $sysParams["sign"] = $this->generateSign($sysParams);
-        //系统参数放入GET请求串
+        // System parameters are put into the GET request string
         if (strpos($this->serverUrl, '?') !== false) {
             $requestUrl = $this->serverUrl . "&";
         } else {
@@ -109,7 +106,7 @@ class JdClient
         foreach ($sysParams as $sysParamKey => $sysParamValue) {
             $requestUrl .= "$sysParamKey=" . urlencode($sysParamValue) . "&";
         }
-        //发起HTTP请求
+        // Make an HTTP request
         try {
             $resp = $this->curl($requestUrl, $apiParams);
         } catch (Exception $e) {
@@ -118,7 +115,7 @@ class JdClient
             return $result;
         }
 
-        //解析JD返回结果
+        // Parsing results returned by JD
         $respWellFormed = false;
         if ("json" == $this->format) {
             $respObject = json_decode($resp, true);
@@ -135,7 +132,7 @@ class JdClient
             }
         }
 
-        //返回的HTTP文本不是标准JSON或者XML，记下错误日志
+        // The returned HTTP text is not standard JSON or XML. Write down the error log.
         if (false === $respWellFormed) {
             $result->code = 0;
             $result->msg = "HTTP_RESPONSE_NOT_WELL_FORMED";
@@ -145,14 +142,19 @@ class JdClient
         return $respObject;
     }
 
+	private function camelize($uncamelized_words, $separator = '_')
+	{
+		$uncamelized_words = $separator . str_replace($separator , " ", strtolower($uncamelized_words));
+		return ltrim(str_replace(" ", "", ucwords($uncamelized_words)), $separator );
+	}
+
     public function exec($paramsArray)
     {
         if (!isset($paramsArray["method"])) {
             trigger_error("No api name passed");
         }
-        $inflector = new LtInflector;
-        $inflector->conf["separator"] = ".";
-        $requestClassName = ucfirst($inflector->camelize(substr($paramsArray["method"], 7))) . "Request";
+
+        $requestClassName = ucfirst($this->camelize(substr($paramsArray["method"], 7), ".")) . "Request";
         if (!class_exists($requestClassName)) {
             trigger_error("No such api: " . $paramsArray["method"]);
         }
@@ -162,10 +164,8 @@ class JdClient
         $req = new $requestClassName;
         foreach($paramsArray as $paraKey => $paraValue)
         {
-            $inflector->conf["separator"] = "_";
-            $setterMethodName = $inflector->camelize($paraKey);
-            $inflector->conf["separator"] = ".";
-            $setterMethodName = "set" . $inflector->camelize($setterMethodName);
+	        $setterMethodName = $this->camelize($paraKey, "_");
+            $setterMethodName = "set" . $this->camelize($setterMethodName, ".");
             if (method_exists($req, $setterMethodName)) {
                 $req->$setterMethodName($paraValue);
             }
@@ -175,8 +175,8 @@ class JdClient
 
     private function recordAccessOutLog($ch, $method, $url, $content, $params, $options = [])
     {
-        // 如果是跑test case的直接跳过
-        if (YII_ENV == 'test') {
+        // If you are running a test case, skip it directly.
+        if (defined("YII_ENV") && YII_ENV == 'test') {
             return true;
         }
 
@@ -191,7 +191,7 @@ class JdClient
             'method' => $method,
             'url' => substr($url, strpos($url, parse_url($url, PHP_URL_PATH))),
             'responseStatus' => $info['http_code'],
-            'responseTime' => floor($info['total_time'] * 1000), // 单位:毫秒
+            'responseTime' => floor($info['total_time'] * 1000), // Unit: milliseconds
             'others' => [
                 'contentType' => $info['content_type'],
                 'namelookupTime' => floor($info['namelookup_time'] * 1000),
@@ -209,13 +209,19 @@ class JdClient
             $message['others']['responseBody'] = $content;
         }
 
-        $encodedMessage = Json::encode($message) . "\n";
+		$encodedMessage = json_encode($message) . "\n";
 
         if (defined('DISABLE_ACCESS_OUT_LOG')) {
-            $logFile = Yii::$app->getRuntimePath() . '/logs/access-out.log';
+			if (class_exists("Yii")) {
+				$logFile = \Yii::$app->getRuntimePath() . '/logs/access-out.log';
+			} else {
+				$logFile = defined('JD_ACCESS_OUT_LOG_FILE') ? JD_ACCESS_OUT_LOG_FILE : '';
+			}
             $logPath = dirname($logFile);
             if (!is_dir($logPath)) {
-                FileHelper::createDirectory($logPath, 0775, true);
+                if ( ! mkdir( $logPath, 0775, true ) && ! is_dir( $logPath ) ) {
+                    throw new \RuntimeException( sprintf( 'Directory "%s" was not created', $logPath ) );
+                }
             }
             $text = '[' . date('Y-m-d H:i:s', time()) . ']' . $encodedMessage;
             $file = fopen($logFile, 'a');
@@ -228,7 +234,7 @@ class JdClient
         if (PHP_SAPI === 'cli') {
             echo $encodedMessage;
         } else {
-            file_put_contents('/var/run/phplog', $encodedMessage);
+            error_log($encodedMessage);
         }
 
         return true;
