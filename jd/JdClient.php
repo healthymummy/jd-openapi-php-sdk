@@ -144,7 +144,7 @@ class JdClient
 
 	private function camelize($uncamelized_words, $separator = '_')
 	{
-		$uncamelized_words = $separator . str_replace($separator , " ", strtolower($uncamelized_words));
+		$uncamelized_words = $separator . str_replace($separator , " ", $uncamelized_words);
 		return ltrim(str_replace(" ", "", ucwords($uncamelized_words)), $separator );
 	}
 
@@ -154,7 +154,7 @@ class JdClient
             trigger_error("No api name passed");
         }
 
-        $requestClassName = ucfirst($this->camelize(substr($paramsArray["method"], 7), ".")) . "Request";
+        $requestClassName = ucfirst($this->camelize(substr($paramsArray["method"], 8), ".")) . "Request";
         if (!class_exists($requestClassName)) {
             trigger_error("No such api: " . $paramsArray["method"]);
         }
