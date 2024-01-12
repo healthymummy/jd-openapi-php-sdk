@@ -3,7 +3,7 @@ namespace Jd\request;
 
 class PopJmGetUserBaseInfoByPinRequest
 {
-    private $apiParas = array();
+    private $apiParams = array();
     private $pin;
     private $loadType;
 
@@ -12,9 +12,9 @@ class PopJmGetUserBaseInfoByPinRequest
         return "jingdong.pop.jm.getUserBaseInfoByPin";
     }
 
-    public function getApiParas()
+    public function getApiParams()
     {
-        return json_encode($this->apiParas);
+        return json_encode($this->apiParams);
     }
 
     public function check()
@@ -23,14 +23,14 @@ class PopJmGetUserBaseInfoByPinRequest
 
     public function putOtherTextParam($key, $value)
     {
-        $this->apiParas[$key] = $value;
+        $this->apiParams[$key] = $value;
         $this->$key = $value;
     }
 
     public function setPin($pin)
     {
         $this->pin = $pin;
-        $this->apiParas["pin"] = $pin;
+        $this->apiParams["pin"] = $pin;
     }
 
     public function getPin()
@@ -42,7 +42,7 @@ class PopJmGetUserBaseInfoByPinRequest
     public function setLoadType($loadType)
     {
         $this->loadType = $loadType;
-        $this->apiParas["loadType"] = $loadType;
+        $this->apiParams["loadType"] = $loadType;
     }
 
     public function getLoadType()

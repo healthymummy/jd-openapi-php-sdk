@@ -15,7 +15,7 @@ class JdClient
     public $version = "2.0";
     public $format = "json";
     private $charset_utf8 = "UTF-8";
-    private $json_param_key = "360buy_param_json";
+    private $json_param_key = "param_json";
 
     protected function generateSign($params)
     {
@@ -26,7 +26,6 @@ class JdClient
                 $stringToBeSigned .= "$k$v";
             }
         }
-        unset($k, $v);
         $stringToBeSigned .= $this->appSecret;
         return strtoupper(md5($stringToBeSigned));
     }
@@ -37,6 +36,8 @@ class JdClient
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_FAILONERROR, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+		curl_setopt($ch, CURLOPT_HEADER, "Content-Type: application/json;charset='utf-8");
         if ($this->readTimeout) {
             curl_setopt($ch, CURLOPT_TIMEOUT, $this->readTimeout);
         }
@@ -59,7 +60,6 @@ class JdClient
                     $postMultipart = true;
                 }
             }
-            unset($k, $v);
             curl_setopt($ch, CURLOPT_POST, true);
             if ($postMultipart) {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
@@ -75,7 +75,7 @@ class JdClient
         $response = curl_exec($ch);
         $this->recordAccessOutLog($ch, 'POST', $url, $response, $postFields, ['logResponse' => true]);
         if (curl_errno($ch)) {
-            throw new Exception(curl_error($ch), 0);
+            throw new Exception(curl_error($ch), curl_errno($ch));
         } else {
             $httpStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             if (200 !== $httpStatusCode) {
@@ -89,28 +89,32 @@ class JdClient
     public function execute($request, $access_token = null)
     {
         // Setting system parameters
+	    $sysParams["timestamp"] = date("Y-m-d H:i:s");
+	    $sysParams["v"] = $this->version;
         $sysParams["app_key"] = $this->appKey;
-        $sysParams["v"] = $this->version;
         $sysParams["method"] = $request->getApiMethodName();
-        $sysParams["timestamp"] = date("Y-m-d H:i:s");
         if (null != $access_token) {
             $sysParams["access_token"] = $access_token;
         }
 
         // Getting service parameters
-        $apiParams = $request->getApiParas();
+        $apiParams = $request->getApiParams();
         $sysParams[$this->json_param_key] = $apiParams;
 
         // Signature
-        $sysParams["sign"] = $this->generateSign($sysParams);
+        $sysParams = array_merge( ["sign" => $this->generateSign($sysParams)], $sysParams);
+
         // System parameters are put into the GET request string
-        if (strpos($this->serverUrl, '?') !== false) {
-            $requestUrl = $this->serverUrl . "&";
-        } else {
-            $requestUrl = $this->serverUrl . "?";
-        }
+
+	    $requestUrl = $this->serverUrl;
+
         foreach ($sysParams as $sysParamKey => $sysParamValue) {
-            $requestUrl .= "$sysParamKey=" . urlencode($sysParamValue) . "&";
+	        if (strpos($requestUrl, '?') !== false) {
+		        $requestUrl .= "&";
+	        } else {
+		        $requestUrl .= "?";
+	        }
+            $requestUrl .= "$sysParamKey=" . urlencode($sysParamValue);
         }
         // Make an HTTP request
         try {
@@ -167,7 +171,7 @@ class JdClient
             trigger_error("No such api: " . $paramsArray["method"]);
         }
 
-        $session = isset($paramsArray["session"]) ? $paramsArray["session"] : null;
+        $session = isset($paramsArray["session"]) ? $paramsArray["session"] : $this->accessToken;
 
         $req = new $requestClassName;
         foreach($paramsArray as $paraKey => $paraValue)

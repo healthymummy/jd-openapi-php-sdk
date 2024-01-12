@@ -3,7 +3,7 @@ namespace Jd\request;
 
 class PopOrderNotPayOrderInfoRequest
 {
-    private $apiParas = array();
+    private $apiParams = array();
     private $startDate;
     private $endDate;
     private $page;
@@ -14,9 +14,9 @@ class PopOrderNotPayOrderInfoRequest
         return "jingdong.pop.order.notPayOrderInfo";
     }
 
-    public function getApiParas()
+    public function getApiParams()
     {
-        return json_encode($this->apiParas);
+        return json_encode($this->apiParams);
     }
 
     public function check()
@@ -24,14 +24,14 @@ class PopOrderNotPayOrderInfoRequest
 
     public function putOtherTextParam($key, $value)
     {
-        $this->apiParas[$key] = $value;
+        $this->apiParams[$key] = $value;
         $this->$key = $value;
     }
 
     public function setStartDate($startDate)
     {
         $this->startDate = $startDate;
-        $this->apiParas["startDate"] = $startDate;
+        $this->apiParams["startDate"] = $startDate;
     }
 
     public function getStartDate()
@@ -42,7 +42,7 @@ class PopOrderNotPayOrderInfoRequest
     public function setEndDate($endDate)
     {
         $this->endDate = $endDate;
-        $this->apiParas["endDate"] = $endDate;
+        $this->apiParams["endDate"] = $endDate;
     }
 
     public function getEndDate()
@@ -53,7 +53,7 @@ class PopOrderNotPayOrderInfoRequest
     public function setPage($page)
     {
         $this->page = $page;
-        $this->apiParas["page"] = $page;
+        $this->apiParams["page"] = $page;
     }
 
     public function getPage()
@@ -64,7 +64,7 @@ class PopOrderNotPayOrderInfoRequest
     public function setPageSize($pageSize)
     {
         $this->pageSize = $pageSize;
-        $this->apiParas["pageSize"] = $pageSize;
+        $this->apiParams["pageSize"] = $pageSize;
     }
 
     public function getPageSize()

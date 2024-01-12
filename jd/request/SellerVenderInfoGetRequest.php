@@ -3,7 +3,7 @@ namespace Jd\request;
 
 class SellerVenderInfoGetRequest
 {
-    private $apiParas = array();
+    private $apiParams = array();
     private $extJsonParam;
 
     public function getApiMethodName()
@@ -11,7 +11,7 @@ class SellerVenderInfoGetRequest
         return "jingdong.seller.vender.info.get";
     }
 
-    public function getApiParas()
+    public function getApiParams()
     {
         return json_encode(new \stdClass());
     }
@@ -22,14 +22,14 @@ class SellerVenderInfoGetRequest
 
     public function putOtherTextParam($key, $value)
     {
-        $this->apiParas[$key] = $value;
+        $this->apiParams[$key] = $value;
         $this->$key = $value;
     }
 
     public function setExtJsonParam($extJsonParam)
     {
         $this->extJsonParam = $extJsonParam;
-        $this->apiParas["ext_json_param"] = $extJsonParam;
+        $this->apiParams["ext_json_param"] = $extJsonParam;
     }
 
     public function getExtJsonParam()

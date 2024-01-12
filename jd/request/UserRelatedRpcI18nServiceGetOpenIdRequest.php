@@ -3,7 +3,7 @@ namespace Jd\request;
 
 class UserRelatedRpcI18nServiceGetOpenIdRequest
 {
-    private $apiParas = array();
+    private $apiParams = array();
     private $version;
     private $pin;
 
@@ -12,12 +12,12 @@ class UserRelatedRpcI18nServiceGetOpenIdRequest
         return 'jingdong.UserRelatedRpcI18nService.getOpenId';
     }
 
-    public function getApiParas()
+    public function getApiParams()
     {
-        if (empty($this->apiParas)) {
+        if (empty($this->apiParams)) {
             return '{}';
         }
-        return json_encode($this->apiParas);
+        return json_encode($this->apiParams);
     }
 
     public function check()
@@ -26,7 +26,7 @@ class UserRelatedRpcI18nServiceGetOpenIdRequest
 
     public function putOtherTextParam($key, $value)
     {
-        $this->apiParas[$key] = $value;
+        $this->apiParams[$key] = $value;
         $this->$key = $value;
     }
 
@@ -43,7 +43,7 @@ class UserRelatedRpcI18nServiceGetOpenIdRequest
     public function setPin($pin)
     {
         $this->pin = $pin;
-        $this->apiParas['pin'] = $pin;
+        $this->apiParams['pin'] = $pin;
     }
 
     public function getPin()

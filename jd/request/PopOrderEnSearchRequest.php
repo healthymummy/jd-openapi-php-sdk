@@ -3,7 +3,7 @@ namespace Jd\request;
 
 class PopOrderEnSearchRequest
 {
-    private $apiParas = array();
+    private $apiParams = array();
     private $version;
     private $startDate;
     private $endDate;
@@ -19,12 +19,12 @@ class PopOrderEnSearchRequest
         return 'jingdong.pop.order.enSearch';
     }
 
-    public function getApiParas()
+    public function getApiParams()
     {
-        if (empty($this->apiParas)) {
+        if (empty($this->apiParams)) {
             return '{}';
         }
-        return json_encode($this->apiParas);
+        return json_encode($this->apiParams);
     }
 
     public function check()
@@ -33,7 +33,7 @@ class PopOrderEnSearchRequest
 
     public function putOtherTextParam($key, $value)
     {
-        $this->apiParas[$key] = $value;
+        $this->apiParams[$key] = $value;
         $this->$key = $value;
     }
 
@@ -50,7 +50,7 @@ class PopOrderEnSearchRequest
     public function setStartDate($startDate)
     {
         $this->startDate = $startDate;
-        $this->apiParas['start_date'] = $startDate;
+        $this->apiParams['start_date'] = $startDate;
     }
 
     public function getStartDate()
@@ -61,7 +61,7 @@ class PopOrderEnSearchRequest
     public function setEndDate($endDate)
     {
         $this->endDate = $endDate;
-        $this->apiParas['end_date'] = $endDate;
+        $this->apiParams['end_date'] = $endDate;
     }
 
     public function getEndDate()
@@ -72,7 +72,7 @@ class PopOrderEnSearchRequest
     public function setOrderState($orderState)
     {
         $this->orderState = $orderState;
-        $this->apiParas['order_state'] = $orderState;
+        $this->apiParams['order_state'] = $orderState;
     }
 
     public function getOrderState()
@@ -83,7 +83,7 @@ class PopOrderEnSearchRequest
     public function setOptionalFields($optionalFields)
     {
         $this->optionalFields = $optionalFields;
-        $this->apiParas['optional_fields'] = $optionalFields;
+        $this->apiParams['optional_fields'] = $optionalFields;
     }
 
     public function getOptionalFields()
@@ -94,7 +94,7 @@ class PopOrderEnSearchRequest
     public function setPage($page)
     {
         $this->page = $page;
-        $this->apiParas['page'] = $page;
+        $this->apiParams['page'] = $page;
     }
 
     public function getPage()
@@ -105,7 +105,7 @@ class PopOrderEnSearchRequest
     public function setPageSize($pageSize)
     {
         $this->pageSize = $pageSize;
-        $this->apiParas['page_size'] = $pageSize;
+        $this->apiParams['page_size'] = $pageSize;
     }
 
     public function getPageSize()
@@ -116,7 +116,7 @@ class PopOrderEnSearchRequest
     public function setSortType($sortType)
     {
         $this->sortType = $sortType;
-        $this->apiParas['sortType'] = $sortType;
+        $this->apiParams['sortType'] = $sortType;
     }
 
     public function getSortType()
@@ -127,7 +127,7 @@ class PopOrderEnSearchRequest
     public function setDateType($dateType)
     {
         $this->dateType = $dateType;
-        $this->apiParas['dateType'] = $dateType;
+        $this->apiParams['dateType'] = $dateType;
     }
 
     public function getDateType()

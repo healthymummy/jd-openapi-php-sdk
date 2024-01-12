@@ -3,7 +3,7 @@ namespace Jd\request;
 
 class AreasCityGetRequest
 {
-    private $apiParas = array();
+    private $apiParams = array();
     private $parentId;
 
     public function getApiMethodName()
@@ -11,9 +11,9 @@ class AreasCityGetRequest
         return "jingdong.areas.city.get";
     }
 
-    public function getApiParas()
+    public function getApiParams()
     {
-        return json_encode($this->apiParas);
+        return json_encode($this->apiParams);
     }
 
     public function check()
@@ -22,14 +22,14 @@ class AreasCityGetRequest
 
     public function putOtherTextParam($key, $value)
     {
-        $this->apiParas[$key] = $value;
+        $this->apiParams[$key] = $value;
         $this->$key = $value;
     }
 
     public function setParentId($parentId)
     {
         $this->parentId = $parentId;
-        $this->apiParas["parent_id"] = $parentId;
+        $this->apiParams["parent_id"] = $parentId;
     }
 
     public function getParentId()

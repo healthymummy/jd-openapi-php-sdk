@@ -3,7 +3,7 @@ namespace Jd\request;
 
 class AscQueryListRequest
 {
-    private $apiParas = array();
+    private $apiParams = array();
     private $buId;
     private $operatePin;
     private $operateNick;
@@ -31,9 +31,9 @@ class AscQueryListRequest
         return "jingdong.asc.query.list";
     }
 
-    public function getApiParas()
+    public function getApiParams()
     {
-        return json_encode($this->apiParas);
+        return json_encode($this->apiParams);
     }
 
     public function check()
@@ -41,14 +41,14 @@ class AscQueryListRequest
 
     public function putOtherTextParam($key, $value)
     {
-        $this->apiParas[$key] = $value;
+        $this->apiParams[$key] = $value;
         $this->$key = $value;
     }
 
     public function setBuId($buId)
     {
         $this->buId = $buId;
-        $this->apiParas["buId"] = $buId;
+        $this->apiParams["buId"] = $buId;
     }
 
     public function getBuId()
@@ -59,7 +59,7 @@ class AscQueryListRequest
     public function setOperatePin($operatePin)
     {
         $this->operatePin = $operatePin;
-        $this->apiParas["operatePin"] = $operatePin;
+        $this->apiParams["operatePin"] = $operatePin;
     }
 
     public function getOperatePin()
@@ -70,7 +70,7 @@ class AscQueryListRequest
     public function setOperateNick($operateNick)
     {
         $this->operateNick = $operateNick;
-        $this->apiParas["operateNick"] = $operateNick;
+        $this->apiParams["operateNick"] = $operateNick;
     }
 
     public function getOperateNick()
@@ -81,7 +81,7 @@ class AscQueryListRequest
     public function setServiceId($serviceId)
     {
         $this->serviceId = $serviceId;
-        $this->apiParas["serviceId"] = $serviceId;
+        $this->apiParams["serviceId"] = $serviceId;
     }
 
     public function getServiceId()
@@ -92,7 +92,7 @@ class AscQueryListRequest
     public function setOrderId($orderId)
     {
         $this->orderId = $orderId;
-        $this->apiParas["orderId"] = $orderId;
+        $this->apiParams["orderId"] = $orderId;
     }
 
     public function getOrderId()
@@ -103,7 +103,7 @@ class AscQueryListRequest
     public function setApplyTimeBegin($applyTimeBegin)
     {
         $this->applyTimeBegin = $applyTimeBegin;
-        $this->apiParas["applyTimeBegin"] = $applyTimeBegin;
+        $this->apiParams["applyTimeBegin"] = $applyTimeBegin;
     }
 
     public function getApplyTimeBegin()
@@ -114,7 +114,7 @@ class AscQueryListRequest
     public function setApplyTimeEnd($applyTimeEnd)
     {
         $this->applyTimeEnd = $applyTimeEnd;
-        $this->apiParas["applyTimeEnd"] = $applyTimeEnd;
+        $this->apiParams["applyTimeEnd"] = $applyTimeEnd;
     }
 
     public function getApplyTimeEnd()
@@ -125,7 +125,7 @@ class AscQueryListRequest
     public function setFinishTimeBegin($finishTimeBegin)
     {
         $this->finishTimeBegin = $finishTimeBegin;
-        $this->apiParas["finishTimeBegin"] = $finishTimeBegin;
+        $this->apiParams["finishTimeBegin"] = $finishTimeBegin;
     }
 
     public function getFinishTimeBegin()
@@ -136,7 +136,7 @@ class AscQueryListRequest
     public function setFinishTimeEnd($finishTimeEnd)
     {
         $this->finishTimeEnd = $finishTimeEnd;
-        $this->apiParas["finishTimeEnd"] = $finishTimeEnd;
+        $this->apiParams["finishTimeEnd"] = $finishTimeEnd;
     }
 
     public function getFinishTimeEnd()
@@ -147,7 +147,7 @@ class AscQueryListRequest
     public function setVerificationCode($verificationCode)
     {
         $this->verificationCode = $verificationCode;
-        $this->apiParas["verificationCode"] = $verificationCode;
+        $this->apiParams["verificationCode"] = $verificationCode;
     }
 
     public function getVerificationCode()
@@ -158,7 +158,7 @@ class AscQueryListRequest
     public function setExpressCode($expressCode)
     {
         $this->expressCode = $expressCode;
-        $this->apiParas["expressCode"] = $expressCode;
+        $this->apiParams["expressCode"] = $expressCode;
     }
 
     public function getExpressCode()
@@ -169,7 +169,7 @@ class AscQueryListRequest
     public function setOrderType($orderType)
     {
         $this->orderType = $orderType;
-        $this->apiParas["orderType"] = $orderType;
+        $this->apiParams["orderType"] = $orderType;
     }
 
     public function getOrderType()
@@ -180,7 +180,7 @@ class AscQueryListRequest
     public function setProcessResult($processResult)
     {
         $this->processResult = $processResult;
-        $this->apiParas["processResult"] = $processResult;
+        $this->apiParams["processResult"] = $processResult;
     }
 
     public function getProcessResult()
@@ -191,7 +191,7 @@ class AscQueryListRequest
     public function setCustomerPin($customerPin)
     {
         $this->customerPin = $customerPin;
-        $this->apiParas["customerPin"] = $customerPin;
+        $this->apiParams["customerPin"] = $customerPin;
     }
 
     public function getCustomerPin()
@@ -202,7 +202,7 @@ class AscQueryListRequest
     public function setCustomerName($customerName)
     {
         $this->customerName = $customerName;
-        $this->apiParas["customerName"] = $customerName;
+        $this->apiParams["customerName"] = $customerName;
     }
 
     public function getCustomerName()
@@ -213,7 +213,7 @@ class AscQueryListRequest
     public function setCustomerTel($customerTel)
     {
         $this->customerTel = $customerTel;
-        $this->apiParas["customerTel"] = $customerTel;
+        $this->apiParams["customerTel"] = $customerTel;
     }
 
     public function getCustomerTel()
@@ -224,7 +224,7 @@ class AscQueryListRequest
     public function setApproveTimeBegin($approveTimeBegin)
     {
         $this->approveTimeBegin = $approveTimeBegin;
-        $this->apiParas["approveTimeBegin"] = $approveTimeBegin;
+        $this->apiParams["approveTimeBegin"] = $approveTimeBegin;
     }
 
     public function getApproveTimeBegin()
@@ -235,7 +235,7 @@ class AscQueryListRequest
     public function setApproveTimeEnd($approveTimeEnd)
     {
         $this->approveTimeEnd = $approveTimeEnd;
-        $this->apiParas["approveTimeEnd"] = $approveTimeEnd;
+        $this->apiParams["approveTimeEnd"] = $approveTimeEnd;
     }
 
     public function getApproveTimeEnd()
@@ -246,7 +246,7 @@ class AscQueryListRequest
     public function setPageNumber($pageNumber)
     {
         $this->pageNumber = $pageNumber;
-        $this->apiParas["pageNumber"] = $pageNumber;
+        $this->apiParams["pageNumber"] = $pageNumber;
     }
 
     public function getPageNumber()
@@ -257,7 +257,7 @@ class AscQueryListRequest
     public function setPageSize($pageSize)
     {
         $this->pageSize = $pageSize;
-        $this->apiParas["pageSize"] = $pageSize;
+        $this->apiParams["pageSize"] = $pageSize;
     }
 
     public function getPageSize()
@@ -268,7 +268,7 @@ class AscQueryListRequest
     public function setExtJsonStr($extJsonStr)
     {
         $this->extJsonStr = $extJsonStr;
-        $this->apiParas["extJsonStr"] = $extJsonStr;
+        $this->apiParams["extJsonStr"] = $extJsonStr;
     }
 
     public function getExtJsonStr()

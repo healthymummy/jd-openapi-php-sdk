@@ -3,14 +3,14 @@ namespace Jd\request;
 
 class VenderShopQueryRequest
 {
-    private $apiParas = array();
+    private $apiParams = array();
 
     public function getApiMethodName()
     {
         return "jingdong.vender.shop.query";
     }
 
-    public function getApiParas()
+    public function getApiParams()
     {
         return json_encode(new \stdClass());
     }
@@ -21,7 +21,7 @@ class VenderShopQueryRequest
 
      public function putOtherTextParam($key, $value)
      {
-          $this->apiParas[$key] = $value;
+          $this->apiParams[$key] = $value;
           $this->$key = $value;
      }
 }
