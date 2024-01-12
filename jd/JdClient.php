@@ -5,6 +5,7 @@ use \Exception;
 
 class JdClient
 {
+    public $debug = false;
     public $serverUrl = "https://api.jd.com/routerjson";
     public $accessToken;
     public $connectTimeout = 0;
@@ -66,6 +67,11 @@ class JdClient
                 curl_setopt($ch, CURLOPT_POSTFIELDS, substr($postBodyString, 0, -1));
             }
         }
+        if ( $this->debug ) {
+			echo "Sending request: \n";
+            echo "URL: " . $url . "\n";
+			echo "POST: " . (is_array($postFields) ? json_encode($postFields) : $postFields) . "\n";
+        }
         $response = curl_exec($ch);
         $this->recordAccessOutLog($ch, 'POST', $url, $response, $postFields, ['logResponse' => true]);
         if (curl_errno($ch)) {
@@ -110,6 +116,7 @@ class JdClient
         try {
             $resp = $this->curl($requestUrl, $apiParams);
         } catch (Exception $e) {
+			$result = new \stdClass();
             $result->code = $e->getCode();
             $result->msg = $e->getMessage();
             return $result;
@@ -134,6 +141,7 @@ class JdClient
 
         // The returned HTTP text is not standard JSON or XML. Write down the error log.
         if (false === $respWellFormed) {
+			$result = new \stdClass();
             $result->code = 0;
             $result->msg = "HTTP_RESPONSE_NOT_WELL_FORMED";
             return $result;
@@ -154,7 +162,7 @@ class JdClient
             trigger_error("No api name passed");
         }
 
-        $requestClassName = ucfirst($this->camelize(substr($paramsArray["method"], 8), ".")) . "Request";
+        $requestClassName = '\\Jd\\Request\\'.ucfirst($this->camelize(substr($paramsArray["method"], 8), ".")) . "Request";
         if (!class_exists($requestClassName)) {
             trigger_error("No such api: " . $paramsArray["method"]);
         }
