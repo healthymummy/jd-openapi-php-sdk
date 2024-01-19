@@ -32,12 +32,11 @@ class JdClient
 
     public function curl($url, $postFields = null)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_FAILONERROR, false);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	    curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-		curl_setopt($ch, CURLOPT_HEADER, "Content-Type: application/json;charset='utf-8");
+		curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json;charset='utf-8'"]);
         if ($this->readTimeout) {
             curl_setopt($ch, CURLOPT_TIMEOUT, $this->readTimeout);
         }
@@ -45,33 +44,24 @@ class JdClient
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->connectTimeout);
         }
         //https request
-        if(strlen($url) > 5 && strtolower(substr($url,0,5)) == "https" ) {
+        if( str_starts_with( $url,"https" ) ) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         }
 
-        if (is_array($postFields) && 0 < count($postFields)) {
-            $postBodyString = "";
-            $postMultipart = false;
-            foreach ($postFields as $k => $v) {
-                if ("@" != substr($v, 0, 1)) { // Determine whether a file is uploaded
-                    $postBodyString .= "$k=" . urlencode($v) . "&";
-                } else { // Use multipart/form-data for file upload, otherwise use www-form-urlencoded
-                    $postMultipart = true;
-                }
-            }
-            curl_setopt($ch, CURLOPT_POST, true);
-            if ($postMultipart) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
-            } else {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, substr($postBodyString, 0, -1));
-            }
+        if (! empty( $postFields ) ) {
+            //curl_setopt($ch, CURLOPT_POST, true);
+	        curl_setopt($ch, CURLOPT_POST, 1);
+	        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
         }
         if ( $this->debug ) {
 			echo "Sending request: \n";
             echo "URL: " . $url . "\n";
-			echo "POST: " . (is_array($postFields) ? json_encode($postFields) : $postFields) . "\n";
+			echo "POST: ";
+			print_r($postFields);
+			echo "\n\n";
         }
+
         $response = curl_exec($ch);
         $this->recordAccessOutLog($ch, 'POST', $url, $response, $postFields, ['logResponse' => true]);
         if (curl_errno($ch)) {
@@ -89,22 +79,29 @@ class JdClient
     public function execute($request, $access_token = null)
     {
         // Setting system parameters
+	    $sysParams["method"] = $request->getApiMethodName();
+	    if (null != $access_token) {
+		    $sysParams["access_token"] = $access_token;
+	    }
+	    $sysParams["app_key"] = $this->appKey;
 	    $sysParams["timestamp"] = date("Y-m-d H:i:s");
 	    $sysParams["v"] = $this->version;
-        $sysParams["app_key"] = $this->appKey;
-        $sysParams["method"] = $request->getApiMethodName();
-        if (null != $access_token) {
-            $sysParams["access_token"] = $access_token;
-        }
 
         // Getting service parameters
         $apiParams = $request->getApiParams();
-        $sysParams[$this->json_param_key] = $apiParams;
 
         // Signature
-        $sysParams = array_merge( ["sign" => $this->generateSign($sysParams)], $sysParams);
+	    $signature = $this->generateSign(array_merge($sysParams, ['param_json' => $apiParams] ) );
+		$newSysParams = [];
+		foreach ($sysParams as $sysParamKey => $sysParamValue) {
+			if ($sysParamKey === 'timestamp') {
+				$newSysParams['sign'] = $signature;
+			}
+			$newSysParams[$sysParamKey] = $sysParamValue;
+		}
+		$sysParams = $newSysParams;
 
-        // System parameters are put into the GET request string
+	    // System parameters are put into the GET request string
 
 	    $requestUrl = $this->serverUrl;
 
