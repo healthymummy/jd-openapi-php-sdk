@@ -1,21 +1,21 @@
 {
-    "name": "maiscrm/jd-openapi-php-sdk",
+    "name": "healthymummy/jd-openapi-php-sdk",
     "description": "jd openapi SDK for PHP",
     "keywords": [ "jd", "sdk" ],
     "type": "library",
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "Lorne Qi",
-            "homepage": "https://www.maiscrm.com/"
-        },
-        {
             "name": "David Marín",
             "homepage": "https://www.healthymummy.com/"
+        },
+        {
+            "name": "Lorne Qi",
+            "homepage": "https://www.maiscrm.com/"
         }
     ],
     "require": {
-        "php": ">=5.5.0"
+        "php": ">=8.0"
     },
     "minimum-stability": "stable",
     "autoload": {
