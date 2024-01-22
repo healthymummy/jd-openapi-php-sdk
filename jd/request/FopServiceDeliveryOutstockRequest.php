@@ -131,9 +131,9 @@ class FopServiceDeliveryOutstockRequest
 			}
 		}
 
-		if ( ! isset($this->scCode) ) {
-			throw new \Exception('Missing required scCode parameter');
-		}
+		//if ( ! isset($this->scCode) ) {
+		//	throw new \Exception('Missing required scCode parameter');
+		//}
 
 		if ( ! isset($this->scOrderNo) ) {
 			throw new \Exception('Missing required scOrderNo parameter');
@@ -185,7 +185,7 @@ class FopServiceDeliveryOutstockRequest
 			throw new \Exception( 'Missing required warehouseCode parameter' );
 		}
 
-		if ( empty($this->goodDto) ) {
+		if ( empty($this->goodsDto) ) {
 			throw new \Exception( 'Missing required order product list' );
 		}
 
@@ -217,8 +217,6 @@ class FopServiceDeliveryOutstockRequest
 	public function setCustomerBillCode($customerBillCode)
 	{
 		$this->customerBillCode                = $customerBillCode;
-		$this->requestInfo["customerBillCode"] = $customerBillCode;
-		$this->outstockDto["customerBillCode"] = $customerBillCode;
 	}
 
 	public function getCustomerBillCode()
@@ -291,17 +289,6 @@ class FopServiceDeliveryOutstockRequest
 	public function getOutstockType()
 	{
 		return $this->outstockType;
-	}
-
-	public function setCustomerBillCode($customerBillCode)
-	{
-		$this->customerBillCode                = $customerBillCode;
-		$this->outstockDto["customerBillCode"] = $customerBillCode;
-	}
-
-	public function getCustomerBillCode()
-	{
-		return $this->customerBillCode;
 	}
 
 	public function setOrderType($orderType)

@@ -177,6 +177,14 @@ class JdClient
             $setterMethodName = "set" . $this->camelize($setterMethodName, ".");
             if (method_exists($req, $setterMethodName)) {
                 $req->$setterMethodName($paraValue);
+            } else {
+	            $setterMethodName = $this->camelize($paraKey, "_");
+				$setterMethodName =  $this->camelize('add.' . $setterMethodName, ".") . 'Line';
+				if (method_exists($req, $setterMethodName)) {
+					foreach( $paraValue as $rowParaValue ) {
+						call_user_func_array( [$req, $setterMethodName], $rowParaValue );
+					}
+				}
             }
         }
         return $this->execute($req, $session);
