@@ -1,7 +1,7 @@
 <?php
 namespace Jd\Request;
 
-class FopOutstockQueryOutStockList {
+class FopOutstockQueryOutStockListRequest {
 	private $fopRequestHeader = [];
 	private $outStockPageQueryDto = [];
 
@@ -95,6 +95,7 @@ class FopOutstockQueryOutStockList {
 	{
 		$this->customerCode                     = $customerCode;
 		$this->fopRequestHeader["customerCode"] = $customerCode;
+		$this->outStockPageQueryDto["customerCode"] = $customerCode;
 	}
 
 	public function getCustomerCode()
