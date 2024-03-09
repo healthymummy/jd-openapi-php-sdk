@@ -157,7 +157,7 @@ class JdClient
 		return ltrim(str_replace(" ", "", ucwords($uncamelized_words)), $separator );
 	}
 
-    public function exec($paramsArray)
+    public function exec($paramsArray, $attachRequestToResponse = false)
     {
         if (!isset($paramsArray["method"])) {
             trigger_error("No api name passed");
@@ -187,7 +187,13 @@ class JdClient
 				}
             }
         }
-        return $this->execute($req, $session);
+        $result = $this->execute($req, $session);
+
+		if ( $attachRequestToResponse && is_array( $result ) ) {
+			$result['request'] = array_merge ([$req->getApiMethodName()], json_decode( $req->getApiParams(), true));
+		}
+
+		return $result;
     }
 
     private function recordAccessOutLog($ch, $method, $url, $content, $params, $options = [])
