@@ -217,6 +217,7 @@ class FopServiceDeliveryOutstockRequest
 	public function setCustomerBillCode($customerBillCode)
 	{
 		$this->customerBillCode                = $customerBillCode;
+		$this->outstockDto['customerBillCode'] = $customerBillCode;
 	}
 
 	public function getCustomerBillCode()
