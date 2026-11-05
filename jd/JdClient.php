@@ -7,6 +7,9 @@ use \Exception;
 class JdClient {
 	public $debug = false;
 	public $serverUrl = "https://api.jd.com/routerjson";
+
+	/** @var bool Verify the TLS certificate of the JD server. Only disable for debugging. */
+	public $verifySsl = true;
 	public $accessToken;
 	public $connectTimeout = 0;
 	public $readTimeout = 0;
@@ -42,10 +45,10 @@ class JdClient {
 		if ( $this->connectTimeout ) {
 			curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $this->connectTimeout );
 		}
-		//https request
+		//https request: verify the server certificate (the access token and customer data go in this request)
 		if ( str_starts_with( $url, "https" ) ) {
-			curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
-			curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false );
+			curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, $this->verifySsl );
+			curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, $this->verifySsl ? 2 : 0 );
 		}
 
 		if ( ! empty( $postFields ) ) {
